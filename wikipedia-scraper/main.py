@@ -1,10 +1,7 @@
-import os
-from bs4 import BeautifulSoup
-import datetime
 import json
 import requests
 import logging as logger
-from pathlib import Path
+from bs4 import BeautifulSoup
 
 LIMIT = 1000
 MAX_ITER = 100
