@@ -1,10 +1,11 @@
 import json
 import requests
 import logging as logger
+from threading import Thread
 from bs4 import BeautifulSoup
 
 LIMIT = 1000
-MAX_ITER = 100
+MAX_ITER = 50
 # todo: extract logger config and default ouput path to config file.
 
 logger.basicConfig(level=logger.INFO)
@@ -18,13 +19,9 @@ def getUrl(offset=0):
                 LIMIT+""" + str(LIMIT) + """+OFFSET+""" + str(offset) +"""&format=application%2Fsparql-results%2Bjson
                 &timeout=0&signal_void=on&signal_unconnected=on"""
 
-counter = 0
-offset = 0
-while counter < MAX_ITER :
-    logger.info('======= Iteration %d =======', (counter+1))
+def task(filename, offset):
     response = requests.get(getUrl(offset))
     json_data = json.loads(response.text)
-    filename = 'data/data_iter'+ str(counter+1) + '.txt'
     f = open(filename, 'w')
     for item in json_data['results']['bindings']:
         link = item['sitelink']['value']
@@ -42,10 +39,24 @@ while counter < MAX_ITER :
             if value.startswith('/wiki'):
                 value = link.split('/wiki')[0] + value
             f.write(link + ' ' + value + '\n')
-    offset += LIMIT
-    counter += 1
+
     f.close()
 
+
+counter = 0
+offset = 0
+threadList = []
+while counter < MAX_ITER :
+    filename = 'data/data_iter'+ str(counter+1) + '.txt'
+    thread = Thread(target=task, args=(filename, offset, ))
+    thread.start()
+    threadList.append(thread)
+    logger.info('Thread %d started', (counter+1))
+    offset += LIMIT
+    counter += 1
+
+for thread in threadList:
+    thread.join()
 
     
     
