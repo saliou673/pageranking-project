@@ -47,7 +47,7 @@ def task(filename, offset):
                 isFirstItem = False
             else:
                 f.write( ', (' + value + ')')
-        f.write(' }\n\n')
+        f.write(' }\n')
     f.close()
 
 
