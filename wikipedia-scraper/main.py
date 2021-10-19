@@ -4,7 +4,7 @@ import logging as logger
 from threading import Thread
 from bs4 import BeautifulSoup
 
-LIMIT = 1000
+LIMIT = 1250
 MAX_ITER = 50
 # todo: extract logger config and default ouput path to config file.
 
@@ -29,7 +29,11 @@ def task(filename, offset):
         response = requests.get(link)
         soup = BeautifulSoup(response.text, "html.parser")
         links = soup.select("#bodyContent a")
+        tagLength = len(links)
+        isFirstItem = True
+        f.write(link + ' 1 {')
         for tag in links:
+            tagLength -= 1
             if(not tag.has_attr('href')):
                 continue
             value = tag['href']
@@ -38,8 +42,12 @@ def task(filename, offset):
                 continue
             if value.startswith('/wiki'):
                 value = link.split('/wiki')[0] + value
-            f.write(link + ' ' + value + '\n')
-
+            if isFirstItem:
+                f.write('(' + value +')')
+                isFirstItem = False
+            else:
+                f.write( ', (' + value + ')')
+        f.write(' }\n\n')
     f.close()
 
 
@@ -51,7 +59,7 @@ while counter < MAX_ITER :
     thread = Thread(target=task, args=(filename, offset, ))
     thread.start()
     threadList.append(thread)
-    logger.info('Thread %d started', (counter+1))
+    logger.info('Thread %d started...', (counter+1))
     offset += LIMIT
     counter += 1
 
