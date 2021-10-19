@@ -4,8 +4,8 @@ import logging as logger
 from threading import Thread
 from bs4 import BeautifulSoup
 
-LIMIT = 1250
-MAX_ITER = 50
+LIMIT = 1250*5*2
+MAX_ITER = 10
 # todo: extract logger config and default ouput path to config file.
 
 logger.basicConfig(level=logger.INFO)
