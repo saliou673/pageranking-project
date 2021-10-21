@@ -1,5 +1,7 @@
 #!/usr/bin/python
 from org.apache.pig.scripting import *
+import sys
+import os
 
 pigQuery = Pig.compile("""
 lastComputedPagerank = 
@@ -10,7 +12,7 @@ lastComputedPagerank =
 pagerankContribution = 
     FOREACH lastComputedPagerank 
     GENERATE 
-        pagerank / COUNT ( links ) AS pagerank, 
+        pagerank / COUNT ( links ) AS contrib, 
         FLATTEN ( links ) AS to_url; 
 
 newPageRanking = 
@@ -18,21 +20,26 @@ newPageRanking =
         ( COGROUP pagerankContribution BY to_url, lastComputedPagerank BY url INNER )
     GENERATE 
         group AS url, 
-        ( 1 - $d ) + $d * SUM ( pagerankContribution.pagerank ) AS pagerank, 
-        FLATTEN ( lastComputedPagerank.links ) AS links;
-        
+        ( 1 - $d ) + $d * SUM (pagerankContribution.contrib) AS pagerank, 
+        FLATTEN ( lastComputedPagerank.links ) AS links, SUM (pagerankContribution.contrib) as contrib;
+
+DESCRIBE newPageRanking;
+
 STORE newPageRanking 
     INTO '$outputData' 
     USING PigStorage('\t');
 """)
 
 params = {
-    'd': '0.5',
-    'inputData':
-    '../../data/data.txt',
+    'd': '0.85',
+    'inputData': sys.argv[1],
     'outputData': ''
     }
+
 outputDir = "target"
+if not os.path.exists(outputDir):
+    os.mkdir(outputDir)
+    
 TOTAL_ITERATION  = 10
 for i in range(TOTAL_ITERATION):
 	output = outputDir + "/rankpage-iter-" + str(i + 1)

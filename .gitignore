@@ -1,2 +1,5 @@
 /wikipedia-scraper/data/
 /ranker/*/target
+target
+*.crc
+*.txt

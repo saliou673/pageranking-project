@@ -13,7 +13,7 @@ from pyspark.sql import SparkSession
 
 # Format input data.
 def parse(line):
-    res = line.split(' 1 ')
+    res = line.split('\t1\t')
     urls = res[1]\
             .replace('{','')\
             .replace('}','')\
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         # Re-calculates URL ranks based on neighbor contributions.
         ranks = contribs.reduceByKey(add).mapValues(lambda rank: rank * 0.85 + 0.15)
 
-    # Collects all URL ranks and dump them to console.
+    # Collects all URL ranks and dump them to the 
     f = open('ranking-output.txt', 'w')
     for (link, rank) in ranks.collect():
         print("%s has rank: %s." % (link, rank), file=f)
