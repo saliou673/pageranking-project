@@ -21,11 +21,15 @@ WHERE {
 LIMIT 10000  OFFSET 0
 ```
 
-Cette requête a ensuite été envoyé via l'API https://wikidata.demo.openlinksw.com/sparql afin lire progressivement les données et les stockés en local sous le format:
+Cette requête a ensuite été envoyé via l'API https://wikidata.demo.openlinksw.com/sparql afin lire progressivement les urls des différentes pages.
 
-URL1    1   { (URL2), (URL3)}\\
-...\\
-URLN    1   { (URLX), (URLY), ...}\\
+Ensuite chaque url est scrapé avec https://pypi.org/project/beautifulsoup4[BeautifulSoup 4] pour récupére toutes les adresses et sont stockés sous le format:
+
+URL1    1   { (URL2), (URL3)}
+
+...
+
+URLN    1   { (URLX), (URLY), ...}
 
 === Format de la requête HTTP
 
