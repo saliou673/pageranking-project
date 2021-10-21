@@ -32,13 +32,11 @@ STORE newPageRanking
 
 params = {
     'd': '0.85',
-    'inputData': sys.argv[1],
+    'inputData': 'gs://dataset-pagerank/data.txt',
     'outputData': ''
     }
 
-outputDir = "target"
-if not os.path.exists(outputDir):
-    os.mkdir(outputDir)
+outputDir = "gs://dataset-pagerank"
     
 TOTAL_ITERATION  = 10
 for i in range(TOTAL_ITERATION):

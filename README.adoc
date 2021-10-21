@@ -1,0 +1,60 @@
+= Projet page Ranking Master 2 ALMA Nantes Université
+
+== Dataset
+Pour l'obtention du dataset, on a préféré créer notre propre dataset
+en faisant du scraping sur https://www.wikipédia.com[Wikipedia] via https://www.dbpedia.com[DBPedia].
+
+== Première étape: Requête SPARQL
+Pour accéder aux différents articles de https://www.wikipédia.com[Wikipedia], nous avons écris une requête SPARQL qui liste tous articles.
+
+[sparql]
+```
+SELECT ?sitelink
+WHERE {
+  ?item wdt:P21 wd:Q6581097;
+        wdt:P31
+                 wd:Q5.
+  ?sitelink schema:about ?item;
+  schema:isPartOf <https://en.wikipedia.org/>.
+} 
+
+LIMIT 10000  OFFSET 0
+```
+
+Cette requête a ensuite été envoyé via l'API https://wikidata.demo.openlinksw.com/sparql afin lire progressivement les données et les stockés en local sous le format:
+
+URL1    1   { (URL2), (URL3)}\\
+...\\
+URLN    1   { (URLX), (URLY), ...}\\
+
+=== Format de la requête HTTP
+
+[http]
+```
+GET https://wikidata.demo.openlinksw.com/sparql?default-graph-uri=http://www.wikidata.org/&query=requeteSparql&format=application/sparql-results+json&timeout=0&signal_void=on&signal_unconnected=on
+```
+== Uploader les données sur Google Cloud Storage
+Pour éviter de restocker les données à chaque nouvelle éxécution des scripts *PIG* et *SPARK*. Les données sont stockées sur *Google Cloud Storage*. 
+
+Le dataset de 1 Go est disponible https://storage.googleapis.com/dataset-pagerank/data.txt[ici].
+
+== Lancer les scripts de pages ranking
+
+Avant de lancer un script, il faut ouvrir le fichier correspondant et modifier le nom du cluster et assurez-vous d'ouvrir le terminal à la racine.
+
+[bash]
+```
+gcloud ... --cluster=le-nom-de-votre-cluster
+```
+=== Lancement de PIG
+[bash]
+```
+./run-pig.sh
+```
+=== Lancement de SPARK
+[bash]
+```
+./run-spark.sh
+```
+
+== Comparaison PIG et SPARK

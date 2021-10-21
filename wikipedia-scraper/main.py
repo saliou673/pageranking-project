@@ -31,7 +31,7 @@ def task(filename, offset):
         links = soup.select("#bodyContent a")
         tagLength = len(links)
         isFirstItem = True
-        f.write(link + ' 1 {')
+        f.write(link + '\t1\t{')
         for tag in links:
             tagLength -= 1
             if(not tag.has_attr('href')):
