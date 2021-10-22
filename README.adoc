@@ -25,11 +25,13 @@ Cette requête a ensuite été envoyé via l'API https://wikidata.demo.openlinks
 
 Ensuite chaque url est scrapé avec https://pypi.org/project/beautifulsoup4[BeautifulSoup 4] pour récupére toutes les adresses et sont stockés sous le format:
 
+```
 URL1    1   { (URL2), (URL3)}
 
 ...
 
 URLN    1   { (URLX), (URLY), ...}
+```
 
 === Format de la requête HTTP
 
@@ -63,29 +65,29 @@ gcloud ... --cluster=le-nom-de-votre-cluster
 
 == Comparaison PIG et SPARK
 Dans le tableau ci-après la durée en temps de l'éxécution de chaque script
-sur *10 itérations* sur le cluster avec 2 noeuds et 5 noeuds.
+sur *10 itérations* sur le cluster avec *2 noeuds* et *5 noeuds*.
 
 
 |===
 ||2 Noeuds |5 Noeuds
 
-|SPARK
+|*SPARK*
 |7 minutes 25 secondes
 |5 minutes 47 secondes
 
-|SPARK
+|*PIG*
 |19 minutes 30 secondes
 |15 minutes 24 secondes
 |===
 
-On peut clairement voir que SPARK est plus rapide que PIG.
+On peut clairement voir que *SPARK* est plus rapide que *PIG*.
 
-Cette différence de performances pourrait s'expliquer par le fait qu'avec PIG,
-à chaque itération l'ensemble des données sont écrit sur le disque (ce qui est couteux en temps) alors que SPARK manipule visiblement données en mémoire RAM.
+Cette différence de performances pourrait s'expliquer par le fait qu'avec *PIG*,
+à chaque itération l'ensemble des données sont écrit sur le disque (ce qui est couteux en temps) alors que *SPARK* manipule visiblement données en mémoire RAM.
 
 === Plus de noeud pour plus de rapidité ?
 En se basant sur les résultats de performance précédent, on peut espérer réduire le temps d'éxécution. 
 
 Mais à un certains niveau, l'augmentation du nombre de noeuds n'aura pas d'effet.
 
-NOTE: Nous n'avons pas pu tester au délà de 5 noeuds suites à des limitations de credit Google cloud.
+NOTE: Nous n'avons pas pu tester au délà de 5 noeuds suites à des limitations de credit *Google cloud*.
