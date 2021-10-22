@@ -1,5 +1,11 @@
 = Projet page Ranking Master 2 ALMA Nantes Université
 
+== Auteurs
+. Mamadou Saliou DIALLO (18C764T)
+. Ibrahima DIALLO
+. Mamadou DIALLO
+. Yassine El Kamel
+
 == Structure du projet
 - link:./[pageranking-project] : Racine du projet.
 - link:data[] contient un dataset légé.
