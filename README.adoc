@@ -5,7 +5,7 @@
 - link:data[] contient un dataset légé.
 - link:ranker/spark[]: contient le code page ranking avec spark.
 - link:ranker/pig[]: contient le code page ranking avec pig.
-- link:wikipedia-scraper: contient code du scraper pour wikipédia.
+- link:wikipedia-scraper[]: contient code du scraper pour wikipédia.
 ```
 == Dataset
 Pour l'obtention du dataset, on a préféré créer notre propre dataset
