@@ -1,20 +1,11 @@
 = Projet page Ranking Master 2 ALMA Nantes Université
 
 == Structure du projet
-[plantuml, treeview, png]
-```
-skinparam Legend {
-	BackgroundColor transparent
-	BorderColor transparent
-}
-legend
-pageranking-project
-|_ data: contient un dataset légé.
-  |_ ranker: contient les script de page ranking
-    |_ spark: code page ranking avec spark
-    |_ pig: code page ranking avec pig
-  |_ wikipedia-scraper: code du scraper pour wikipédia.
-end legend
+- link:./[pageranking-project] : Racine du projet.
+- link:data[] contient un dataset légé.
+- link:ranker/spark[]: contient le code page ranking avec spark.
+- link:ranker/pig[]: contient le code page ranking avec pig.
+- link:wikipedia-scraper: contient code du scraper pour wikipédia.
 ```
 == Dataset
 Pour l'obtention du dataset, on a préféré créer notre propre dataset
