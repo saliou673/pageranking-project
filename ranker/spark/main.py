@@ -1,9 +1,3 @@
-"""
-This is an example implementation of PageRank. For more conventional use,
-Please refer to PageRank implementation provided by graphx
-Example Usage:
-bin/spark-submit examples/src/main/python/pagerank.py data/mllib/pagerank_data.txt 10
-"""
 import re
 import sys
 from operator import add
@@ -39,33 +33,30 @@ def parseNeighbors(urls):
 
 
 if __name__ == "__main__":
-    print("WARN: This is a naive implementation of PageRank and is given as an example!\n" +
-          "Please refer to PageRank implementation provided by graphx",
-          file=sys.stderr)
 
-    # Initialize the spark context.
+    # Initialisation de spark.
     spark = SparkSession.builder.appName("PythonPageRank").getOrCreate()
+    
     base_path = 'gs://dataset-pagerank'
     input_file = base_path + '/data.txt'
-    # Loads in input file. It should be in format of:
+    # Chargement des données:
     lines = spark.read.text(input_file).rdd.map(lambda r:parse(r[0])).flatMap(lambda x:x)
 
-    # Loads all URLs from input file and initialize their neighbors.
+    # Chargement des urls et initialisation de leurs voisins.
     links = lines.map(lambda urls: parseNeighbors(urls)).distinct().groupByKey().cache()
 
-    # Loads all URLs with other URL(s) link to from input file and initialize ranks of them to one.
+    # Chargement de toutes les URLs vers lesquelles d'autres URL sont liées
+    # à partir du fichier d'entrée et initialise leur rang à 1.
     ranks = links.map(lambda url_neighbors: (url_neighbors[0], 1.0))
 
-    # Calculates and updates URL ranks continuously using PageRank algorithm.
+    # Calcul itératif des rangs.
     for iteration in range(10):
-        # Calculates URL contributions to the rank of other URLs.
+        # Calcul de la contribution par URL.
         contribs = links.join(ranks).flatMap(
             lambda url_urls_rank: computeContribs(url_urls_rank[1][0], url_urls_rank[1][1]))
 
-        # Re-calculates URL ranks based on neighbor contributions.
         ranks = contribs.reduceByKey(add).mapValues(lambda rank: rank * 0.85 + 0.15)
 
-    # Collects all URL ranks and dump them to the 
     print("=========== R e s u l t a t   d u  r a n k i n g ===========")
     for (link, rank) in ranks.collect():
         print("%s has rank: %s." % (link, rank))

@@ -23,8 +23,6 @@ newPageRanking =
         ( 1 - $d ) + $d * SUM (pagerankContribution.contrib) AS pagerank, 
         FLATTEN ( lastComputedPagerank.links ) AS links, SUM (pagerankContribution.contrib) as contrib;
 
-DESCRIBE newPageRanking;
-
 STORE newPageRanking 
     INTO '$outputData' 
     USING PigStorage('\t');
